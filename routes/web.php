@@ -19,8 +19,6 @@ Route::get('Kuy', function () {
 return 'Hello World';
 });
 
-Route::get('demoone', 'DemoController@index');
-
 Route::post('demotwo', 'DemoController@demotwo');
 
 Route::match(['get', 'post'], 'demothree', 'DemoController@demothree');
@@ -47,6 +45,16 @@ Route::get('demonine/{id}/{name}', function ($id, $name) {
     return 'demonine ID: '.$id.' || NAME: '.$name;
 })->where(['id' => '[0-9]+', 'name' => '[a-z]+']);
 
+Route::get('/testlinenoti', 'DemoController@testlinenoti');
+Route::get('/testexcel', 'DemoController@testexcel');
+
 Route::resource('photos', 'PhotoController');
 
-Route::resource('admin/users', 'Admin\UsersController');
+Route::prefix('admin')->middleware('auth')->group(function () {
+	Route::get('demoone', 'DemoController@index');
+    Route::resource('users', 'Admin\UsersController');
+});
+
+Route::get('login', 'LoginController@index')->name('login');
+Route::get('logout', 'LoginController@logout');
+Route::post('login', 'LoginController@authenticate');

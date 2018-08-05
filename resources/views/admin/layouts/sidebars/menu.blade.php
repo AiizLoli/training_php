@@ -1,8 +1,8 @@
 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
   <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-    <a class="nav-link" href="#">
+    <a class="nav-link" href="{{ URL::to('admin/users') }}">
       <i class="fa fa-fw fa-dashboard"></i>
-      <span class="nav-link-text">Dashboard</span>
+      <span class="nav-link-text">Users</span>
     </a>
   </li>
 

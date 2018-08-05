@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->integer('active')->default(1);
             $table->rememberToken();
             $table->timestamps();
+            $table->string('api_token', 60)->unique()->nullable();
         });
     }
 

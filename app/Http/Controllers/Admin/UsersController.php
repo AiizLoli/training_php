@@ -20,39 +20,6 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //phpinfo();
-        //$mods = UserMod::all();
-        /*$mods = UserMod::where('active', 1)
-                ->where('city', 'bangkok')
-                ->orderBy('name', 'desc')
-                ->take(100)
-                ->get(); */
-
-                /*$mods = UserMod::find([1,2,3,4,10]);
-
-         foreach ($mods as $item) {
-            echo $item->name."  ".$item->surname."  ".$item->email."<br />";
-        }*/
-        /*$count = UserMod::where('active', 1)->count();
-        echo $count;*/
-
-      /*$mods = UserMod::all();
-        return view('test', compact('mods')  ); 
-
-        $data = [
-           'name' => 'My Name',
-           'surname' => 'My SurName',
-           'email' => 'myemail@gmail.com'
-       ];
-
-        $user = UserMod::find(1);
-
-        $mods = UserMod::all();
-
-        return view('test', compact('data', 'user', 'mods')); */
-
-        //return view('admin.layouts.template');
-        //return view('admin.user.lists');
 
         $mods = UserMod::paginate(15);
          return view('admin.user.lists', compact('mods') );
@@ -66,7 +33,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.user.create');
     }
 
     /**
@@ -77,12 +44,30 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        /*$mod = UserMod::find(1);
-        $mod->name = 'New Flight Name';
-        $mod->email = $request->email;
+         request()->validate([
+            'name' => 'required|min:2|max:50',
+            'surname' => 'required|min:2|max:50',
+            'mobile' => 'required|numeric',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+            'age' => 'required|numeric',
+            'confirm_password' => 'required|min:6|max:20|same:password',
+        ], [
+            'name.required' => 'Name is required',
+            'name.min' => 'Name must be at least 2 characters.',
+            'name.max' => 'Name should not be greater than 50 characters.',
+        ]);
+
+        $mod = new UserMod;
+        $mod->email    = $request->email;
         $mod->password = bcrypt($request->password);
+        $mod->name     = $request->name;
+        $mod->surname  = $request->surname;
+        $mod->mobile   = $request->mobile;
+        $mod->age      = $request->age;
+        $mod->address  = $request->address;
+        $mod->city     = $request->city;
         $mod->save();
-		*/
     }
 
     /**
@@ -140,7 +125,8 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item = UserMod::find($id);
+        return view('admin.user.edit', compact('item'));
     }
 
     /**
@@ -152,12 +138,31 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-		$mod = UserMod::find($id);
-        $mod->name = 'New Flight Name';
-        $mod->email = $request->email;
-        $mod->password = bcrypt($request->password);
+         request()->validate([
+            'name' => 'required|min:2|max:50',
+            'surname' => 'required|min:2|max:50',
+            'mobile' => 'required|numeric',
+            'age' => 'required|numeric',
+        ], [
+            'name.required' => 'Name is required',
+            'name.min' => 'Name must be at least 2 characters.',
+            'name.max' => 'Name should not be greater than 50 characters.',
+        ]);
+
+        $mod = UserMod::find($id);
+        $mod->name     = $request->name;
+        $mod->surname  = $request->surname;
+        //$mod->email    = $request->email;
+        $mod->mobile   = $request->mobile;
+        $mod->surname  = $request->surname;
+        $mod->age      = $request->age;
+        $mod->address  = $request->address;
+        $mod->city     = $request->city;
         $mod->save();
-        echo "Update Successfully";
+
+        return redirect('admin/users')
+                    ->with('success', 'User ['.$request->name.'] updated successfully.');
+
     }
 
     /**
